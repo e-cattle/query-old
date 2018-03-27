@@ -31,7 +31,11 @@ const bodyTemperature = new Schema({
         type:Date,
         default: Date.now,
         required:true
-    }
+    }, 
+    dateSync:{
+        type: Date,
+        default:Date.now()
+    },
 },{collection: "type-body-temperature"});
 
 module.exports =  mongoose.model ('type-body-temperature', bodyTemperature);

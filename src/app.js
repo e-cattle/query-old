@@ -11,14 +11,16 @@ const router = express.Router();
 mongoose.connect(config.db.development);
 
 // Carrega os Models
-const Device = require('./models/device');
+const Devicekernel = require('./models/device-kernel'); //raspberry
+const Device = require('./models/device'); //devices do raspberry
 const Constract = require('./models/contract');
 const BodyTemperature = require('./models/body-temperature');
 
 // Carrega as Rotas
 const indexRoute = require('./routes/index-sync-route'); //Rotas da pagina inicial
-const deviceRoute = require('./routes/device-sync-route'); //Cadastro de Dispositivos
-const measureRoute = require('./routes/measure-sync-route'); //Cadastro de dados dos Sensores
+const deviceKernelRoute= require('./routes/device-kernel-route'); //Cadastro de Dispositivos
+const deviceSyncRoute = require('./routes/device-sync-route'); //Cadastro de Dispositivos
+const measureSyncRoute = require('./routes/measure-sync-route'); //Cadastro de dados dos Sensores
 
 //Conversor de Json
 app.use(bodyParser.json());
@@ -36,7 +38,8 @@ app.use(function (req, res, next) {
 
 //Registrando as rotas
 app.use('/', indexRoute);
-app.use('/devices', deviceRoute);
-app.use('/measures', measureRoute);
+app.use('/devices-kernel', deviceKernelRoute);
+app.use('/devices-sync', deviceSyncRoute);
+app.use('/measures-sync', measureSyncRoute);
 
 module.exports = app;

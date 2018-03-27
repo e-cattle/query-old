@@ -1,16 +1,15 @@
 'use strict';
 
-//ROUTERS apenas dos Device
+//ROUTERS para gerenciar os Rapsberrys PI
 const express = require('express');
 const router = express.Router();
-const deviceSyncController = require('../controllers/device-sync-controller');
 const deviceKernelController = require('../controllers/device-kernel-controller');
 
 const authService = require('../services/auth-service'); 
 
-router.post('/', deviceSyncController.save);
-router.put('/', deviceSyncController.save);
-router.get('/', deviceSyncController.getAll);
+router.post('/', deviceKernelController.save);
+router.put('/', deviceKernelController.save);
+router.get('/', deviceKernelController.getAll);
 
 router.post('/authenticate', deviceKernelController.authenticate);
 router.post('/renew-token', authService.renewToken);

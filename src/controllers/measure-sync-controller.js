@@ -9,19 +9,23 @@ const contractRepository = require('../repositories/contract-repository');
 const authService = require('../services/auth-service');
 const deviceService = require('../services/device-service');
 
+/**
+ 1) Identica o Raspberry se ele está castrado
+ 2) Registra todas os dados sensoriais de todos os devices 
+ */
 exports.create = async (req, res, next) => {
         
-        let sensorTypeValidator = new SensorTypeValidator();   
-
-        //Le o mac do dispositivo e valida se existe
-        const device = await deviceRepository.authenticate({mac: req.body.mac});
+       
+        //Le o mac do dispositivo (Raspberry) e valida se existe
+        const deviceKernel = await deviceRepository.authenticate({mac: req.body.mac});
         
         //Envia mensagem de erro se não encontrar dispositivo
-        if (!device) {
+        if (!deviceKernel) {
                 res.status(404).send({message: 'Dispositivo Inválido ou Bloqueado'});
                 return;
         }
         
+        //Measures de todos os sensores de todos os devices existentes
         let measures = req.body.measures;
         
         //Verifica se tem medidas
@@ -30,19 +34,7 @@ exports.create = async (req, res, next) => {
                 return;
         }
         
-        //Verifica se o dispositivo tem autorização para os dados dos sensores que ele enviou
-        try{
-                sensorTypeValidator.validadeMeasures(req.body.measures);
-                
-                if (!sensorTypeValidator.isValid()) {
-                        res.status(400).json(sensorTypeValidator.errors());
-                        return;
-                }
-        }catch(err){
-                console.log(err);
-                res.status(500).json({message: `Erro na validação dos dados sensoriais: ${err}`});
-        }
-        
+      
         //Salva os dados sensoriais
         for (let i = 0; i < measures.length; i++) {
                 let sensor = measures[i];

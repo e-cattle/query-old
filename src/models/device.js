@@ -2,11 +2,11 @@
 
 const mongoose = require('mongoose');
 
-
+//Representa um conjunto de devices que possem sensores e enviam dados 
+//para o device kernel (raspberry)
 const device = new mongoose.Schema({
     name: {
-        type: String,
-        required: [true, 'porque sem nome?']
+        type: String
     },
     enable:{
         type: Boolean,
@@ -15,27 +15,25 @@ const device = new mongoose.Schema({
     },
     mac: {
         type: String,
-        required: true,  
         index: true,
-        unique: true
-    }, 
+     }, 
     version:{
-        type: Number,
-        required:true
-        
+        type: Number
     }, 
+    dateSync:{
+        type: Date,
+        default:Date.now()
+    },
+
     sensors: [{
         type:{
-            type: String,
-            required: true
+            type: String
         }, 
         descriptor:{
-            type: String,
-            required: true
+            type: String
         },
         unix:{
-            type: String,
-            required: true
+            type: String
         }
     }]
 });

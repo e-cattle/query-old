@@ -92,7 +92,7 @@ exports.renewToken = async function (req, res) {
 
     var token = await generateToken({
         id: device._id,
-        name: device.name
+        mac: device.mac
     });
 
     res.json({token: token});

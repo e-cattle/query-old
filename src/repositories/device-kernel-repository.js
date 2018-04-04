@@ -5,7 +5,10 @@ const DeviceKernel = mongoose.model('DeviceKernel');
 exports.create = async(data) => {
     var device = new DeviceKernel(data);
     return await device.save();
-    
+}
+
+exports.update = async(data) => {
+    return await DeviceKernel.update({_id: data._id}, data);
 }
 
 exports.getAll = async() => {

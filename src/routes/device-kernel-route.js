@@ -8,8 +8,11 @@ const deviceKernelController = require('../controllers/device-kernel-controller'
 const authService = require('../services/auth-service'); 
 
 router.post('/', deviceKernelController.save);
-router.put('/', deviceKernelController.save);
+router.put('/', deviceKernelController.authenticate, deviceKernelController.save);
 router.get('/', deviceKernelController.getAll);
+router.get('/status/:mac', deviceKernelController.getStatusByMac);
+router.get('/enable/:mac', deviceKernelController.enableByMac);
+router.get('/disable/:mac', deviceKernelController.disableByMac);
 
 router.post('/authenticate', deviceKernelController.authenticate);
 router.post('/renew-token', authService.renewToken);

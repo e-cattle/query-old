@@ -11,7 +11,6 @@ const authService = require('../services/auth-service');
 */
 exports.save = async(req, res, next) => {
     
-
     try {
         
         console.log("Iniciando save...")
@@ -21,37 +20,57 @@ exports.save = async(req, res, next) => {
         //senao existe cria um novo
         if (!deviceKernel){
             deviceKernel = {};
-            deviceKernel.enabled=req.body.enabled;
-            deviceKernel.mac= req.body.mac;
+            deviceKernel.enable = false;
+            deviceKernel.mac = req.body.mac;
         }
         
         //Atualizando com os dados HTTP
         deviceKernel.mac= req.body.mac;
-        deviceKernel.name = req.body.name;
        
         //Cadastra o Dispositivo
-        let deviceCreated = await deviceKernelRepository.create(device);
+        let deviceCreated = await deviceKernelRepository.create(deviceKernel);
         
         //Geração do Token
         //Gera o token valido para o dispositivo
         const token = await authService.generateToken({
             id: deviceCreated._id,
-            name: deviceCreated.name
+            mac: deviceCreated.mac
         });
         
-      
         //Envia o novo token para o dispositivo
-        res.status(201).send({
+        res.status(201).json({
             token: token
         });
         
         return ;
         
     } catch (error) {
-        res.status(500).send(error);
-        return;
+        res.status(500).json(error);
+        throw error;
     }
 };
+
+exports.enableByMac =  async (req, res, next)=>{
+    if(!req.params || !req.params.mac) res.status(400).json({ message: "MAC deve ser informado!" })
+    else{
+        let deviceKernel =  await deviceKernelRepository.getByMac(req.params.mac);
+        if(!deviceKernel){ res.status(404).json({ message: "Device não encontrado!" }); return; }
+        deviceKernel.enable = true;
+        deviceKernelRepository.update(deviceKernel);
+        res.json({ message: "Device abilitado com sucesso!" });
+    }
+}
+
+exports.disableByMac =  async (req, res, next)=>{
+    if(!req.params || !req.params.mac) res.status(400).json({ message: "MAC deve ser informado!" })
+    else{
+        let deviceKernel =  await deviceKernelRepository.getByMac(req.params.mac);
+        if(!deviceKernel){ res.status(404).json({ message: "Device não encontrado!" }); return; }
+        deviceKernel.enable = false;
+        deviceKernelRepository.update(deviceKernel);
+        res.json({ message: "Device desabilitado com sucesso!" });
+    }
+}
 
 exports.getAll =  async (req, res, next)=>{
     try{
@@ -63,6 +82,19 @@ exports.getAll =  async (req, res, next)=>{
         res.status(200).send (devices);
     }catch(e){
         res.status(500).send({message:'Falha na requisição', data: e});
+    }
+};
+
+exports.getStatusByMac =  async (req, res, next)=>{
+    try{
+        const device = await deviceKernelRepository.getByMac(req.params.mac);
+        if (!device){
+            res.status(404).json({ message:'Dipositivo não encontrado' });
+            return;
+        }
+        res.status(200).json(device);
+    }catch(e){
+        res.status(500).json({message:'Falha na requisição', data: e});
     }
 };
 
@@ -93,8 +125,7 @@ exports.authenticate = async(req, res, next) => {
         res.status(201).send({
             token: token,
             data: {
-                id: device._id,
-                name: device.name 
+                id: device._id
             }
         });
     } catch (e) {

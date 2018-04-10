@@ -8,8 +8,7 @@ const deviceKernelController = require('../controllers/device-kernel-controller'
 
 const authService = require('../services/auth-service'); 
 
-router.post('/', deviceSyncController.save);
-router.put('/', deviceSyncController.save);
+router.post('/', authService.authorizeKernelDevice, deviceSyncController.save);
 router.get('/', deviceSyncController.getAll);
 
 router.post('/authenticate', deviceKernelController.authenticate);

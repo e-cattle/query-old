@@ -17,14 +17,17 @@ const device = new mongoose.Schema({
         type: String,
         index: true,
      }, 
+    kernelMac: {
+        type: String,
+        require: true
+    }, 
     version:{
         type: Number
     }, 
-    dateSync:{
+    syncedAt:{
         type: Date,
         default:Date.now()
     },
-
     sensors: [{
         type:{
             type: String

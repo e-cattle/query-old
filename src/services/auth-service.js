@@ -67,6 +67,30 @@ exports.authorizeDevice = function (req, res, next) {
     }
 };
 
+exports.authorizeKernelDevice = function (req, res, next) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    var kernelMac = req.body.kernelMac || req.query.kernelMac;
+    
+    if (!token) {
+        res.status(401).json({
+            message: 'Acesso Restrito'
+        });
+    } else {
+        jwt.verify(token, global.SALT_KEY, function (error, decoded) {
+            if (error) {
+                res.status(401).json({
+                    message: 'Token Inválido'
+                });
+            } else {
+                if(!kernelMac) res.status(401).json({ message: 'Endereço MAC do kernel não fornecido' });
+                else if(decoded.mac != kernelMac){
+                    res.status(401).json({ message: 'Endereço MAC do kernel não corresponde ao token fornecido' });
+                }else next();
+            }
+        });
+    }
+};
+
 /*
 Renova o token do Raspberry é de um device cadastrado e ativo, quando o token
 estiver expirado

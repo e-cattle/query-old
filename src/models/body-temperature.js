@@ -9,6 +9,10 @@ const bodyTemperature = new Schema({
         required:true,
         unique: true
     }, 
+    kernelMac:{
+        type:String,
+        required:true
+    },
     mac:{
         type:String,
         required:true

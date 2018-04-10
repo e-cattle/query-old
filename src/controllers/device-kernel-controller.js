@@ -19,9 +19,9 @@ exports.save = async(req, res, next) => {
         console.log("Buscando devide save..."+ deviceKernel)
         //senao existe cria um novo
         if (!deviceKernel){
-            deviceKernel = {};
+            console.log(req.body)
+            deviceKernel = req.body;
             deviceKernel.enable = false;
-            deviceKernel.mac = req.body.mac;
         }
         
         //Atualizando com os dados HTTP
@@ -38,9 +38,7 @@ exports.save = async(req, res, next) => {
         });
         
         //Envia o novo token para o dispositivo
-        res.status(201).json({
-            token: token
-        });
+        res.status(201).json({ message: "Kernel registrado com sucesso, aguardando homologação..." });
         
         return ;
         
@@ -99,40 +97,35 @@ exports.getStatusByMac =  async (req, res, next)=>{
 };
 
 /**
-* Autentica o Dispositivo pelo Mac Adress 
+* Autentica o kernel pelo mac adress 
 */
 exports.authenticate = async(req, res, next) => {
     try {
-        //Le o mac do dispositivo e valida se existe
-        const device = await deviceKernelRepository.authenticate({
-            mac: req.body.mac
-        });
+        //Le o mac do kernel e valida se existe
+        let deviceKernel = await deviceKernelRepository.getByMacEnabled(req.body.mac);
+        
         //Envia mensagem de erro se não encontrar dispositivo
-        if (!device) {
+        if (!deviceKernel) {
             res.status(404).send({
-                message: 'Dispositivo Inválido ou Bloqueado'
+                message: 'Dispositivo inválido ou bloqueado'
             });
             return;
         }
-        //Gera o token valido para o dispositivo
+        
+        //Gera o token valido para o kernel
         const token = await authService.generateToken({
-            id: device._id,
-            name: device.name, 
-            mac:req.body.mac
+            id: deviceKernel._id,
+            name: deviceKernel.name, 
+            mac: req.body.mac
         });
         
-        //Envia o token para o dispositivo
-        res.status(201).send({
-            token: token,
-            data: {
-                id: device._id
-            }
-        });
-    } catch (e) {
-        console.log(e);
+        //Envia o token para o kernel
+        res.status(201).send({ token: token });
+    } catch (err) {
         res.status(500).send({
             message: 'Falha ao processar sua requisição', 
-            data:e
+            data: err
         });
+        throw err;
     }
 };

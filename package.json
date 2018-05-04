@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "chai": "*",
-    "mocha": "*",
+    "mocha": "^5.1.1",
     "nodemon": "*",
     "should": "*",
     "supertest": "^3.0.0"

@@ -1,6 +1,7 @@
 'use strict';
 const jwt = require('jsonwebtoken');
 const DeviceRepository = require('../repositories/device-repository');
+const deviceKernelRepository = require('../repositories/device-kernel-repository');
 
 /*
 Gera o token baseado nos dados "data", junto coma a chave privada global.SALT_KEY
@@ -76,7 +77,7 @@ exports.authorizeKernelDevice = function (req, res, next) {
             message: 'Acesso Restrito'
         });
     } else {
-        jwt.verify(token, global.SALT_KEY, function (error, decoded) {
+        jwt.verify(token, global.SALT_KEY, async function (error, decoded) {
             if (error) {
                 res.status(401).json({
                     message: 'Token Inválido'
@@ -85,7 +86,12 @@ exports.authorizeKernelDevice = function (req, res, next) {
                 if(!kernelMac) res.status(401).json({ message: 'Endereço MAC do kernel não fornecido' });
                 else if(decoded.mac != kernelMac){
                     res.status(401).json({ message: 'Endereço MAC do kernel não corresponde ao token fornecido' });
-                }else next();
+                }else{
+                    let deviceKernel = await deviceKernelRepository.getByMacEnabled(kernelMac);
+                    if(!deviceKernel){
+                        res.status(401).json({ message: 'Dispositivo com o endereço MAC fornecido não está registrado' });
+                    }else next();
+                }
             }
         });
     }

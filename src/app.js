@@ -8,7 +8,8 @@ const app = express();
 const router = express.Router();
 
 // Connecta ao banco
-mongoose.connect(config.db.development);
+mongoose.connect(config.db.development, {useMongoClient: true});
+mongoose.Promise = global.Promise;
 
 // Carrega os Models
 const Devicekernel = require('./models/device-kernel'); //raspberry

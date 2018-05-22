@@ -11,6 +11,10 @@ exports.update = async(data) => {
     return await Device.update(data);
 }
 
+exports.updateById = async(id, data) => {
+    return await Device.findByIdAndUpdate(id, data);
+}
+
 exports.getAll = async() => {
     const res = await Device.find({}, "name description branch model mac enable version sensors");
     return res;

@@ -32,6 +32,7 @@ exports.save = async(req, res, next) => {
         let savedDevice =  await deviceRepository.getByMac(device.mac);
 
         if(device._id) delete device._id;
+        if(device.__v) delete device.__v;
 
         // Validação
         let errors = await validade(device);
@@ -43,7 +44,7 @@ exports.save = async(req, res, next) => {
         device.syncedAt = new Date();        
         if (savedDevice){
             device._id = savedDevice._id
-            await deviceRepository.update(device);
+            await deviceRepository.updateById(savedDevice._id, device);
         }else await deviceRepository.create(device);
         
         //Envia o novo token para o dispositivo

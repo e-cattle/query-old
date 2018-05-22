@@ -12,7 +12,7 @@ exports.update = async(data) => {
 }
 
 exports.getAll = async() => {
-    const res = await DeviceKernel.find({}, "name description branch model mac enable version sensors");
+    const res = await DeviceKernel.find({});
     return res;
 }
 

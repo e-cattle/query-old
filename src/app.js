@@ -15,6 +15,10 @@ mongoose.Promise = global.Promise;
 const Devicekernel = require('./models/device-kernel'); //raspberry
 const Device = require('./models/device'); //devices do raspberry
 const Constract = require('./models/contract');
+const AirTemperature = require('./models/air-temperature');
+const AnimalSpeed = require('./models/animal-speed');
+const AnimalWeight = require('./models/animal-weight');
+const BlackGlobeTemperature = require('./models/black-globe-temperature');
 const BodyTemperature = require('./models/body-temperature');
 
 // Carrega as Rotas

@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const animalWeight = new Schema({
+const heartRate = new Schema({
     uid:{
         type:String,
         required:true,
@@ -19,7 +19,7 @@ const animalWeight = new Schema({
     },
     unity: {
         type:String,
-        default: "Kg",
+        default: "bpm",
         required:true
     },
     dateRegister:{
@@ -35,6 +35,6 @@ const animalWeight = new Schema({
     syncedAt:{
         type: Date        
     },
-},{collection: "type-animal-weight"});
+},{collection: "type-heart-rate"});
 
-module.exports =  mongoose.model ('type-animal-weight', animalWeight);
+module.exports =  mongoose.model ('type-heart-rate', heartRate);

@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const animalWeight = new Schema({
+const gdop = new Schema({
     uid:{
         type:String,
         required:true,
@@ -14,13 +14,22 @@ const animalWeight = new Schema({
         required:true
     },
     value:{
-        type:Number,
-        required:true
-    },
-    unity: {
-        type:String,
-        default: "Kg",
-        required:true
+        hdop:{
+            type:Number,
+            required:false
+        },
+        vdop:{
+            type:Number,
+            required:false
+        },
+        pdop:{
+            type:Number,
+            required:false
+        },
+        tdop:{
+            type:Number,
+            required:false
+        }
     },
     dateRegister:{
         type:Date,
@@ -35,6 +44,6 @@ const animalWeight = new Schema({
     syncedAt:{
         type: Date        
     },
-},{collection: "type-animal-weight"});
+},{collection: "type-gdop"});
 
-module.exports =  mongoose.model ('type-animal-weight', animalWeight);
+module.exports =  mongoose.model ('type-gdop', gdop);

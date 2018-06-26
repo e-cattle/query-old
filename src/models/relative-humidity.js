@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const animalWeight = new Schema({
+const relativeHumidity = new Schema({
     uid:{
         type:String,
         required:true,
@@ -19,7 +19,7 @@ const animalWeight = new Schema({
     },
     unity: {
         type:String,
-        default: "Kg",
+        default: "%",
         required:true
     },
     dateRegister:{
@@ -35,6 +35,6 @@ const animalWeight = new Schema({
     syncedAt:{
         type: Date        
     },
-},{collection: "type-animal-weight"});
+},{collection: "type-relative-humidity"});
 
-module.exports =  mongoose.model ('type-animal-weight', animalWeight);
+module.exports =  mongoose.model ('type-relative-humidity', relativeHumidity);

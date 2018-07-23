@@ -13,23 +13,28 @@ const geographicCoordinate = new Schema({
         type:String,
         required:true
     },
-    value:{
+    value:[{
         altitude:{
             type:Number,
             required:false
         },
         latitude:{
-            type:String,
+            type:Number,
+            min: -90,
+            max: 90,
+            validate: /^-?\d{0,2}(\.\d{1,6})?$/,
             required:false
         },
         longitude:{
-            type:String,
+            type:Number,
+            min: -180,
+            max: 180,
+            validate: /^-?\d{0,3}(\.\d{1,6})?$/,
             required:false
         }
-    },
+    }],
     dateRegister:{
         type:Date,
-        default: Date.now,
         required:true
     },
     dataStorage:{

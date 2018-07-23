@@ -19,6 +19,9 @@ const bodyTemperature = new Schema({
     },
     value:{
         type:Number,
+        min: 20,
+        max: 50,
+        validate: /^\d{0,2}(\.\d{1,2})?$/,
         required:true
     },
     unity: {
@@ -28,7 +31,6 @@ const bodyTemperature = new Schema({
     },
     dateRegister:{
         type:Date,
-        default: Date.now,
         required:true
     },
     dataStorage:{

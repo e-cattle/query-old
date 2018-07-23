@@ -13,27 +13,38 @@ const gdop = new Schema({
         type:String,
         required:true
     },
-    value:{
+    value:[{
         hdop:{
             type:Number,
-            required:false
+            min: 0,
+            max: 50,
+            validate: /^\d{0,2}(\.\d{1,2})?$/,
+            required:true
         },
         vdop:{
             type:Number,
-            required:false
+            min: 0,
+            max: 50,
+            validate: /^\d{0,2}(\.\d{1,2})?$/,
+            required:true
         },
         pdop:{
             type:Number,
-            required:false
+            min: 0,
+            max: 50,
+            validate: /^\d{0,2}(\.\d{1,2})?$/,
+            required:true
         },
         tdop:{
             type:Number,
-            required:false
+            min: 0,
+            max: 50,
+            validate: /^\d{0,2}(\.\d{1,2})?$/,
+            required:true
         }
-    },
+    }],
     dateRegister:{
         type:Date,
-        default: Date.now,
         required:true
     },
     dataStorage:{

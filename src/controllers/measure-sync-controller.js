@@ -34,7 +34,9 @@ exports.create = async (req, res, next) => {
                         return;
                 }
                 
-                
+                let hasError = false;
+                let sensorsError = [];
+
                 //Salva os dados sensoriais
                 for (let i = 0; i < sensors.length; i++) {
                         let sensor = sensors[i];
@@ -45,11 +47,22 @@ exports.create = async (req, res, next) => {
                                 measure.kernelMac = kernelMac;
                                 let newMesure = new Schema(measure);
                                 let savedMeasure = await newMesure.save();
-                                if(!savedMeasure) res.status(500).send({message: `Falha ao salvar dado sensorial: ${sensor.name}`, data: e});
+                                //if(!savedMeasure) res.status(500).send({message: `Falha ao salvar dado sensorial: ${sensor.name}`, data: e});
+
+                                if(!savedMeasure)
+                                {
+                                        hasError = true;
+                                        sensorsError.push(savedMeasure);
+                                }
                         }
                 }
                 
-                res.json({ message: "Dados sensoriais salvos com sucesso" });
+                if (!hasError)
+                        res.status(201).send({message: `Dados sensoriais salvos com sucesso`});
+                else
+                        res.status(500).send({message: `Falha ao salvar dado sensorial:`, data: sensorsError});
+
+                //res.json({ message: "Dados sensoriais salvos com sucesso" });
         } catch (error) {
                 res.status(500).json({ message: error });
         }

@@ -35,7 +35,7 @@ const device = new mongoose.Schema({
         descriptor:{
             type: String
         },
-        unix:{
+        name:{
             type: String
         }
     }]

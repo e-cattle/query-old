@@ -48,6 +48,8 @@ const deviceKernelRoute= require('./routes/device-kernel-route'); //Cadastro de 
 const deviceSyncRoute = require('./routes/device-sync-route'); //Cadastro de Dispositivos
 const measureSyncRoute = require('./routes/measure-sync-route'); //Cadastro de dados dos Sensores
 
+const airTemperatureSyncRoute = require('./routes/air-temperature-sync-route'); //Cadastro de dados dos Sensores
+
 //Conversor de Json
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -67,5 +69,7 @@ app.use('/', indexRoute);
 app.use('/devices-kernel', deviceKernelRoute);
 app.use('/devices-sync', deviceSyncRoute);
 app.use('/measures-sync', measureSyncRoute);
+
+app.use('/air-temperature-sync', airTemperatureSyncRoute);
 
 module.exports = app;

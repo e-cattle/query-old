@@ -40,3 +40,4 @@ const airTemperature = new Schema({
 },{collection: "type-air-temperature"});
 
 module.exports =  mongoose.model ('type-air-temperature', airTemperature);
+//module.exports =  mongoose.model ('AirTemperature', airTemperature);

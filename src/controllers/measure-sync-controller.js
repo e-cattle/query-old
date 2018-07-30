@@ -33,7 +33,48 @@ exports.create = async (req, res, next) => {
                         res.status(404).send({message: 'É necessário informar os sensores'});
                         return;
                 }
+
+                let sensorsError = [];
+                let sensorsValid = [];
+                let sensorsNoValid = [];
+
+                //Salva os dados sensoriais
+                for (let i = 0; i < sensors.length; i++) {
+                        let sensor = sensors[i];
+                        let sensorsContract = device.sensors;
+                        let hasSensor = false;
+                        
+                        //verifica se existe o sensor no contrato
+                        for (let j = 0; j < sensorsContract.length; j++)
+                        {                                
+                                if (sensorsContract[j].name == sensor.name)
+                                {                                        
+                                        hasSensor = true;
+
+                                        var guid = require('crypto').randomBytes(30).toString('base64');
+                                        sensor.datas = {uid: guid, value: sensor.value, date: sensor.date, resource: sensor.resource};
+
+                                        let Schema = mongoose.model(sensorsContract[j].type)
+                                        let newMeasure = new Schema(sensor.datas);
+                                        let savedMeasure = await newMeasure.save();
+
+                                        if(savedMeasure)
+                                                sensorsValid.push(sensorsContract[j].type);
+                                        else
+                                                sensorsError.push(savedMeasure);
+                                }                                        
+                        }
                 
+                        if (!hasSensor)
+                                sensorsNoValid.push(sensor.name);
+                }
+
+                if (sensorsNoValid.length == 0 && sensorsError == 0)
+                        res.status(201).send({message: `Todos os dados sensoriais foram salvos com sucesso`});
+                else
+                        res.status(500).send({sucess: sensorsValid, notfound: sensorsNoValid, erros: sensorsError});
+                
+                /*
                 let hasError = false;
                 let sensorsError = [];
 
@@ -61,8 +102,8 @@ exports.create = async (req, res, next) => {
                         res.status(201).send({message: `Dados sensoriais salvos com sucesso`});
                 else
                         res.status(500).send({message: `Falha ao salvar dado sensorial:`, data: sensorsError});
-
-                //res.json({ message: "Dados sensoriais salvos com sucesso" });
+                */
+                
         } catch (error) {
                 res.status(500).json({ message: error });
         }

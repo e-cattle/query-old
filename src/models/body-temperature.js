@@ -8,14 +8,6 @@ const bodyTemperature = new Schema({
         type:String,
         required:true,
         unique: true
-    }, 
-    kernelMac:{
-        type:String,
-        required:true
-    },
-    mac:{
-        type:String,
-        required:true
     },
     value:{
         type:Number,
@@ -24,14 +16,13 @@ const bodyTemperature = new Schema({
         validate: /^\d{0,2}(\.\d{1,2})?$/,
         required:true
     },
-    unity: {
+    date:{
         type:String,
-        default: "C",
         required:true
     },
-    dateRegister:{
-        type:Date,
-        required:true
+    resource: {
+        type:String,
+        required:false
     },
     dataStorage:{
         type:Date,
